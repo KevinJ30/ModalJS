@@ -30,12 +30,34 @@
 })();
 
 class ModalJS {
-    
-    constructor(width = '60%', height = '60%') {
-        this.width = width;
-        this.height = height;
+    /**
+     * @param {*} parameters 
+     **/
+    constructor(parameters) {
+        this.selected_class = (typeof parameters.selected_class != 'undefined') ? parameters.selected_class : '.modal';
+        this.width = (typeof parameters.width != 'undefined') ? parameters.width : '60%';
+        this.height = (typeof parameters.height != 'undefined') ? parameters.height : '60%';
+        this.btn_open_class = (typeof parameters.btn_open_class != 'undefined') ? parameters.btn_open_class : '.modal_btn_open';
+        this.btn_modal_close = (typeof parameters.btn_modal_close != 'undefined') ? parameters.btn_modal_close : '.modal_btn_close';
     }
 
+    /**
+     * selectionne les modals qui sont dans la page
+     * 
+     * @param {*} modals
+     * @param {*} btn_open_modals
+     **/
+    init = function() {
+        this.btn_modal_opens = document.querySelectorAll(this.btn_open_class);
+        this.intialize_event();
+    }
 
-
+    intialize_event = function() {
+        for(let i = 0; i < this.modals.length; i++) {
+            this.btn_modal_opens[i].addEventListener('click', function(event) {
+                event.preventDefault();
+                console.log('ouverture de la modal');
+            });
+        }
+    }
 }

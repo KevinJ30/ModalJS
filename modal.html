@@ -15,10 +15,29 @@
             <p>Affiche une feneêtre modal</p>
         </header>
 
-        <a href="#" class="modal_btn_open">Cliquer ici pour ouvrire la modal</a>
+        <a href="#" class="modal_btn_open" data-id-modal="modal">Cliquer ici pour ouvrire la modal</a>
         
         <!-- Modal -->
-        <div class="modal" aria-hidden="true">
+        <div id="modal" class="modal" aria-hidden="true">
+            <div class="modal_container">
+                <header class="modal_header">
+                    <h4 class="modal_title">Modals JS</h4>
+                    <a href="#" class="modal_btn_close">×</a>
+                </header>
+                <div class="modal_content">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit fugit labore nostrum cupiditate eaque delectus, suscipit vero culpa saepe totam earum, iusto laboriosam eum veritatis, deleniti dolores nemo nam recusandae est! Eveniet itaque officiis tenetur. Minima vel rerum unde enim commodi, reiciendis, eum dolor ratione, magnam ut cumque doloribus aliquid!</p>
+                </div>
+                <footer class="modal_footer">
+                    <a href="#" class="btn">Close Winddow</a>
+                </footer>
+            </div>
+        </div>
+
+        <!-- Seconde modal -->
+        <a href="#" class="modal_btn_open" data-id-modal="seconde_modal">Cliquer ici pour ouvrire la modal</a>
+        
+        <!-- Modal -->
+        <div id="seconde_modal" class="modal" aria-hidden="true" >
             <div class="modal_container">
                 <header class="modal_header">
                     <h4 class="modal_title">Modals JS</h4>

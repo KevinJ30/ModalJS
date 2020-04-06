@@ -39,6 +39,7 @@ class ModalJS {
         this.height = (typeof parameters.height != 'undefined') ? parameters.height : '60%';
         this.btn_open_class = (typeof parameters.btn_open_class != 'undefined') ? parameters.btn_open_class : '.modal_btn_open';
         this.btn_modal_close = (typeof parameters.btn_modal_close != 'undefined') ? parameters.btn_modal_close : '.modal_btn_close';
+        this.eventModal = {};
     }
 
     /**
@@ -56,7 +57,7 @@ class ModalJS {
      **/
     intialize_event = function() {
         for(let i = 0; i < this.btn_modal_opens.length; i++) {
-            this.btn_modal_opens[i].addEventListener('click', this.openModal);
+            this.btn_modal_opens[i].addEventListener('click', this.openModal.bind(this));
         }
     }
 
@@ -70,17 +71,29 @@ class ModalJS {
         const btn = event.target;
         const modal_name = btn.getAttribute('data-id-modal');
         const modal = document.querySelector('#' + modal_name);
-        const modal_btn_close = modal.querySelector('.modal_btn_close');
         modal.classList.toggle('open');
-        modal.setAttribute('data-hidden', 'false');
-        modal_btn_close.addEventListener('click', this.closeModal);
+        modal.setAttribute('data-hidden', 'false');1
+        this.eventModal.close = modal.querySelector(this.btn_modal_close).addEventListener('click', this.closeModal.bind(this));
     }
 
+    /**
+     * Ferme la fenêtre modal
+     * @param {Event} event
+     **/
     closeModal = function(event) {
-        // Ferme la modal
-        // Reset du data-hidden
-        // supprime l'événement sur le bouton close de la modal
         event.preventDefault();
-        console.log(event.target);
+        const modal = event.target.parentNode.parentNode.parentNode;
+        modal.classList.remove('open');
+        modal.setAttribute('data-hidden', false);
+
+        this.clearEvent(modal);
+    }
+
+    /**
+     * Supprime les événement créer sur la fenêtre modal à l'ouverture
+     * @param {HTMLElement} modal : Fenêtre modal 
+     **/
+    clearEvent = function(modal) {
+        modal.querySelector(this.btn_modal_close).removeEventListener('click', this.eventModal.close);
     }
 }

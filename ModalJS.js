@@ -1,4 +1,4 @@
-(function(){
+/**(function(){
     const btn_open = document.querySelector('a.modal_btn_open');
     const btn_close = document.querySelector('a.modal_btn_close');
     const modal_element = document.querySelector('.modal');
@@ -27,7 +27,7 @@
         close_window(event);
     });
 
-})();
+})();**/
 
 class ModalJS {
     /**
@@ -44,20 +44,43 @@ class ModalJS {
     /**
      * selectionne les modals qui sont dans la page
      * 
-     * @param {*} modals
-     * @param {*} btn_open_modals
+     * @param {*} btn_open_modals : Tous les boutons d'ouverture des modals
      **/
     init = function() {
         this.btn_modal_opens = document.querySelectorAll(this.btn_open_class);
         this.intialize_event();
     }
 
+    /**
+     * Enregistre un tableaux des bouton d'ouverture des modals
+     **/
     intialize_event = function() {
-        for(let i = 0; i < this.modals.length; i++) {
-            this.btn_modal_opens[i].addEventListener('click', function(event) {
-                event.preventDefault();
-                console.log('ouverture de la modal');
-            });
+        for(let i = 0; i < this.btn_modal_opens.length; i++) {
+            this.btn_modal_opens[i].addEventListener('click', this.openModal);
         }
+    }
+
+    /**
+     * Ouvre la modal et ajoute l'événement au bouton close de la modal
+     * 
+     * @param {Event} event 
+     **/
+    openModal = function(event) {
+        event.preventDefault();
+        const btn = event.target;
+        const modal_name = btn.getAttribute('data-id-modal');
+        const modal = document.querySelector('#' + modal_name);
+        const modal_btn_close = modal.querySelector('.modal_btn_close');
+        modal.classList.toggle('open');
+        modal.setAttribute('data-hidden', 'false');
+        modal_btn_close.addEventListener('click', this.closeModal);
+    }
+
+    closeModal = function(event) {
+        // Ferme la modal
+        // Reset du data-hidden
+        // supprime l'événement sur le bouton close de la modal
+        event.preventDefault();
+        console.log(event.target);
     }
 }

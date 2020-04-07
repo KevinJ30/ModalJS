@@ -29,7 +29,7 @@ class ModalJS {
      * 
      * @param {*} btn_open_modals : Tous les boutons d'ouverture des modals
      **/
-    init = function() {
+    init = () => {
         this.btn_modal_opens = document.querySelectorAll(this.btn_open_class);
         this.intialize_event();
     }
@@ -37,7 +37,7 @@ class ModalJS {
     /**
      * Enregistre un tableaux des bouton d'ouverture des modals
      **/
-    intialize_event = function() {
+    intialize_event = () => {
         for(let i = 0; i < this.btn_modal_opens.length; i++) {
             this.btn_modal_opens[i].addEventListener('click', this.event_openModal.bind(this));
         }
@@ -48,7 +48,7 @@ class ModalJS {
      * 
      * @param {Event} event 
      **/
-    event_openModal = function(event) {
+    event_openModal = (event) => {
         event.preventDefault();
 
         let btn = event.target;
@@ -77,6 +77,11 @@ class ModalJS {
         this.closeModal();
     }
 
+    /**
+     * Evénement du bouton échap
+     * 
+     * @param {Event} event
+     **/
     event_escape_close = (event) => {
         event.preventDefault();
 
@@ -86,6 +91,8 @@ class ModalJS {
     };
 
     /**
+     * Ferme la modal active
+     * 
      * @param {HTMLElement} modal
      **/
     closeModal = () => {
@@ -96,7 +103,6 @@ class ModalJS {
 
     /**
      * On nettoie les événements de la modal et supprime les événement enregistrer dans le tableaux
-     * Supprime les événement créer sur la fenêtre modal à l'ouverture
      * 
      * @param {HTMLElement} modal
      **/
@@ -107,7 +113,6 @@ class ModalJS {
         delete this.eventHandler.btn_close;
         delete this.eventHandler.escape_close;
 
-        //delete this.eventHandler.escape_close;
         this.active_modal = null;
     }
 }

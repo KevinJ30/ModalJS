@@ -1,34 +1,15 @@
-/**(function(){
-    const btn_open = document.querySelector('a.modal_btn_open');
-    const btn_close = document.querySelector('a.modal_btn_close');
-    const modal_element = document.querySelector('.modal');
-
-    const close_window = function(event) {
-        event.preventDefault();
-        modal_element.classList.remove('open');
-        modal_element.setAttribute('aria-hidden', 'true');
-    };
-
-    btn_open.addEventListener('click', function(event) {
-        event.preventDefault();
-        modal_element.classList.toggle('open');
-        modal_element.setAttribute('aria-hidden', 'false');
-
-        // On ajoute un evenment sur la touche echap
-        window.addEventListener('keyup', function(event) {
-            console.log(event.keyCode);
-            if(event.keyCode === 27) {
-                close_window(event);
-            }
-        })
-    });
-
-    btn_close.addEventListener('click', function(event) {
-        close_window(event);
-    });
-
-})();**/
-
+/**
+ * 
+ * ModalJS : Boîte de dialog Javascript
+ * 
+ * @property {string} selected_class : Classe qui selectionne les modals
+ * @property {string} width : Taille de la modal en pourcentage css
+ * @property {string} height : Hauteur de la modal en pourcentage css
+ * @property {string} btn_open_modal : Class css du bouton qui ouvre la modal
+ * @property {string} btn_modal_close : Class css du bouton qui ferme la modal
+ * @property {Object} eventHandler : Object contenant les événements de la modal
+ * @property {HTMLElement} active_modal : Enregistre la modal active
+ **/
 class ModalJS {
     /**
      * @param {*} parameters 
@@ -39,7 +20,8 @@ class ModalJS {
         this.height = (typeof parameters.height != 'undefined') ? parameters.height : '60%';
         this.btn_open_class = (typeof parameters.btn_open_class != 'undefined') ? parameters.btn_open_class : '.modal_btn_open';
         this.btn_modal_close = (typeof parameters.btn_modal_close != 'undefined') ? parameters.btn_modal_close : '.modal_btn_close';
-        this.eventModal = {};
+        this.eventHandler = {};
+        this.active_modal = null;
     }
 
     /**
@@ -57,7 +39,7 @@ class ModalJS {
      **/
     intialize_event = function() {
         for(let i = 0; i < this.btn_modal_opens.length; i++) {
-            this.btn_modal_opens[i].addEventListener('click', this.openModal.bind(this));
+            this.btn_modal_opens[i].addEventListener('click', this.event_openModal.bind(this));
         }
     }
 
@@ -66,34 +48,66 @@ class ModalJS {
      * 
      * @param {Event} event 
      **/
-    openModal = function(event) {
+    event_openModal = function(event) {
         event.preventDefault();
-        const btn = event.target;
-        const modal_name = btn.getAttribute('data-id-modal');
-        const modal = document.querySelector('#' + modal_name);
-        modal.classList.toggle('open');
-        modal.setAttribute('data-hidden', 'false');1
-        this.eventModal.close = modal.querySelector(this.btn_modal_close).addEventListener('click', this.closeModal.bind(this));
+
+        let btn = event.target;
+        let modal_name = btn.getAttribute('data-id-modal');
+
+        this.active_modal = document.querySelector('#' + modal_name);
+
+        // Change property modal
+        this.active_modal.classList.toggle('open');
+        this.active_modal.setAttribute('aria-hidden', 'false');
+
+        // Register event
+        this.eventHandler.btn_close = this.event_closeModal.bind(this);
+        this.eventHandler.escape_close = this.event_escape_close.bind(this);
+        
+        this.active_modal.querySelector(this.btn_modal_close).addEventListener('click', this.eventHandler.btn_close);
+        window.addEventListener("keyup", this.eventHandler.escape_close);
     }
 
     /**
-     * Ferme la fenêtre modal
+     * Evénement du bouton close
      * @param {Event} event
      **/
-    closeModal = function(event) {
+    event_closeModal = (event) => {
         event.preventDefault();
-        const modal = event.target.parentNode.parentNode.parentNode;
-        modal.classList.remove('open');
-        modal.setAttribute('data-hidden', false);
+        this.closeModal();
+    }
 
-        this.clearEvent(modal);
+    event_escape_close = (event) => {
+        event.preventDefault();
+
+        if(event.keyCode == 27) {
+            this.closeModal();
+        }
+    };
+
+    /**
+     * @param {HTMLElement} modal
+     **/
+    closeModal = () => {
+        this.active_modal.classList.remove('open');
+        this.active_modal.setAttribute('aria-hidden', true);
+        this.clearEvent();
     }
 
     /**
+     * On nettoie les événements de la modal et supprime les événement enregistrer dans le tableaux
      * Supprime les événement créer sur la fenêtre modal à l'ouverture
-     * @param {HTMLElement} modal : Fenêtre modal 
+     * 
+     * @param {HTMLElement} modal
      **/
-    clearEvent = function(modal) {
-        modal.querySelector(this.btn_modal_close).removeEventListener('click', this.eventModal.close);
+    clearEvent = () => {
+        this.active_modal.querySelector(this.btn_modal_close).removeEventListener('click', this.eventHandler.btn_close);
+        window.removeEventListener("keyup", this.eventHandler.escape_close);
+
+        delete this.eventHandler.btn_close;
+        delete this.eventHandler.escape_close;
+
+        //delete this.eventHandler.escape_close;
+        this.active_modal = null;
     }
 }
